@@ -4,7 +4,7 @@ const ErrorResponse = require('../utils/errorResponse');
 
 
 exports.signup = async (req, res, next) => {
-    const { email } = req.body;
+    const { firstName,lastName,email,password,role } = req.body;
     
     const userExist = await User.findOne({ email });
    
@@ -13,7 +13,8 @@ exports.signup = async (req, res, next) => {
     }
     try {
         console.log("in try block",req.body);
-        const user = await User.create(req.body);
+        const user = await User.create({ firstName, lastName , email, password ,role});
+        console.log(user)
         res.status(201).json({
             success: true,
             user
