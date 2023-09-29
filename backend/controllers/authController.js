@@ -4,23 +4,18 @@ const ErrorResponse = require('../utils/errorResponse');
 
 
 exports.signup = async (req, res, next) => {
-    const { firstName,lastName,email,password,role } = req.body;
-    
+    const { email } = req.body;
     const userExist = await User.findOne({ email });
-   
     if (userExist) {
         return next(new ErrorResponse("E-mail already registred", 400));
     }
     try {
-        console.log("in try block",req.body);
-        const user = await User.create({ firstName, lastName , email, password ,role});
-        console.log(user)
+        const user = await User.create(req.body);
         res.status(201).json({
             success: true,
             user
         })
     } catch (error) {
-        console.log("in catch block")
         next(error);
     }
 }
@@ -61,7 +56,10 @@ const sendTokenResponse = async (user, codeStatus, res) => {
     res
         .status(codeStatus)
         .cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true })
-        .json({ success: true, token, user })
+        .json({
+            success: true,
+            role: user.role
+        })
 }
 
 
@@ -71,5 +69,17 @@ exports.logout = (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "logged out"
+    })
+}
+
+
+// user profile
+exports.userProfile = async (req, res, next) => {
+
+    const user = await User.findById(req.user.id).select('-password');
+
+    res.status(200).json({
+        success: true,
+        user
     })
 }
