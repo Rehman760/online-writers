@@ -1,0 +1,26 @@
+const express = require("express");
+const router = express.Router();
+const chatController = require("../controllers/chatController");
+const { isAuthenticated, isAdmin } = require("../middleware/auth");
+
+// Get message history for a specific user
+router.get(
+  "/messages/:userId",
+  isAuthenticated,
+  chatController.getMessageHistory
+); //working
+
+// Send a message
+router.post("/send", isAuthenticated, chatController.sendMessage); //working
+
+// Get all chat rooms for the admin
+router.get("/chats", isAuthenticated, isAdmin, chatController.getChats); //working
+
+// Get messages for a specific chat room
+router.get(
+  "/messages/room/:roomId",
+  isAuthenticated,
+  chatController.getChatMessages
+);
+
+module.exports = router;
