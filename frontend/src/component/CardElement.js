@@ -1,40 +1,41 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { IconButton, useTheme } from '@mui/material';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { Link } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add';
-
+import React from "react";
+import { Link } from "react-router-dom";
 
 const CardElement = ({ jobTitle, description, category, location, id }) => {
-    const { palette } = useTheme();
-    return (
-        <Card sx={{ minWidth: 275, mb: 3, mt: 3 }}>
-
-            <CardContent >
-                <Typography sx={{ fontSize: 15, color: palette.secondary.main, fontWeight: 500 }} gutterBottom>
-                    <IconButton><LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} /></IconButton> {location}
-                </Typography>
-                <Typography variant="h5" component="div">
-                    {jobTitle}
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {category}
-                </Typography>
-                <Typography variant="body2">
-                    Description: {description.split(" ").slice(0, 15).join(" ") + "..."}
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <Button disableElevation variant='contained' size="small" startIcon={<AddIcon />}><Link style={{ textDecoration: "none", color: "white", boxShadow: 0 }} to={`/job/${id}`}>More Details</Link></Button>
-            </CardActions>
-        </Card>
-    );
-}
+  return (
+    <div className="w-full max-w-md mx-auto p-4 mb-6 rounded-md bg-white shadow-md">
+      <div className="text-xl font-semibold text-secondary flex items-center mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 text-secondary mr-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
+        </svg>
+        {location}
+      </div>
+      <h2 className="text-2xl font-bold">{jobTitle}</h2>
+      <p className="text-secondary mb-2">{category}</p>
+      <p className="text-sm">
+        Description: {description.split(" ").slice(0, 15).join(" ") + "..."}
+      </p>
+      <div className="mt-4">
+        <Link
+          to={`/job/${id}`}
+          className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-secondary-dark transition duration-300"
+        >
+          More Details
+        </Link>
+      </div>
+    </div>
+  );
+};
 
 export default CardElement;

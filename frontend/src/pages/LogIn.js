@@ -1,127 +1,103 @@
-import { Avatar, Box } from '@mui/material'
-import React, { useEffect } from 'react'
-import Footer from '../component/Footer'
-import Navbar from '../component/Navbar'
-import LockClockOutlined from '@mui/icons-material/LockClockOutlined'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux'
-import { userSignInAction } from '../redux/actions/userAction'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from "react";
+import Footer from "../component/Footer";
+import Navbar from "../component/Navbar";
+import { FaSignInAlt } from "react-icons/fa";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { userSignInAction } from "../redux/actions/userAction";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = yup.object({
-    email: yup
-        .string('Enter your email')
-        .email('Enter a valid email')
-        .required('Email is required'),
-    password: yup
-        .string('Enter your password')
-        .min(8, 'Password should be of minimum 8 characters length')
-        .required('Password is required'),
+  email: yup
+    .string("Enter your email")
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string("Enter your password")
+    .min(8, "Password should be of minimum 8 characters length")
+    .required("Password is required"),
 });
 
-
-
 const LogIn = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { isAuthenticated, userInfo } = useSelector(state => state.signIn);
-    useEffect(() => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, userInfo } = useSelector((state) => state.signIn);
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (userInfo.role === 1) {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [isAuthenticated]);
 
-        if (isAuthenticated) {
-            if (userInfo.role === 1) {
-                navigate('/admin/dashboard');
-            } else {
-                navigate('/user/dashboard');
-            }
-        }
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values, actions) => {
+      dispatch(userSignInAction(values));
+      actions.resetForm();
+    },
+  });
 
-        // if (isAuthenticated) {
-        //     navigate('/user/dashboard');
-        // }
-    }, [isAuthenticated])
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="bg-white rounded p-4 border max-w-md w-full"
+        >
+          <div className="text-center mb-3 flex justify-center">
+            <h1 className="text-blue-600 text-2xl">Login</h1>
+            <div className="m-1 bg-blue-600 p-2 rounded-full w-10 h-10">
+              <FaSignInAlt className="text-white" />
+            </div>
+          </div>
+          <div className="mb-4">
+            <input
+              type="text"
+              name="email"
+              placeholder="E-mail"
+              className="w-full p-2 rounded border border-gray-300 focus:outline-none"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.email && formik.errors.email && (
+              <div className="text-red-500">{formik.errors.email}</div>
+            )}
+          </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="w-full p-2 rounded border border-gray-300 focus:outline-none"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.password && formik.errors.password && (
+              <div className="text-red-500">{formik.errors.password}</div>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded"
+          >
+            Log In
+          </button>
+        </form>
+      </div>
+      <Footer />
+    </>
+  );
+};
 
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values, actions) => {
-            //  alert(JSON.stringify(values, null, 2));
-            dispatch(userSignInAction(values));
-            actions.resetForm();
-        }
-
-    })
-
-    return (
-        <>
-            <Navbar />
-            <Box sx={{ height: '81vh', display: "flex", alignItems: "center", justifyContent: "center", bgcolor: "primary.white" }}>
-
-
-                <Box onSubmit={formik.handleSubmit} component="form" className='form_style border-style' >
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                        <Avatar sx={{ m: 1, bgcolor: "primary.main", mb: 3 }}>
-                            <LockClockOutlined sx={{ color: 'white' }} />
-                        </Avatar>
-                        <TextField
-                            sx={{
-                                mb: 3,
-                                "& .MuiInputBase-root": {
-                                    color: 'text.secondary',
-                                },
-                                fieldset: { borderColor: "rgb(231, 235, 240)" }
-                            }}
-                            fullWidth
-                            id="email"
-                            label="E-mail"
-                            name='email'
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-
-                            placeholder="E-mail"
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.email && Boolean(formik.errors.email)}
-                            helperText={formik.touched.email && formik.errors.email}
-                        />
-                        <TextField
-                            sx={{
-                                mb: 3,
-                                "& .MuiInputBase-root": {
-                                    color: 'text.secondary'
-                                },
-                                fieldset: { borderColor: "rgb(231, 235, 240)" }
-                            }}
-                            fullWidth
-                            id="password"
-                            name="password"
-                            label="Password"
-                            type="password"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            placeholder="Password"
-                            value={formik.values.password}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.password && Boolean(formik.errors.password)}
-                            helperText={formik.touched.password && formik.errors.password}
-                        />
-
-                        <Button fullWidth variant="contained" type='submit' >Log In</Button>
-                    </Box>
-                </Box>
-            </Box>
-            <Footer />
-        </>
-    )
-}
-
-export default LogIn
+export default LogIn;

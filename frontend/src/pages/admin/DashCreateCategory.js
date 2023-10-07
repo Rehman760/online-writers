@@ -1,75 +1,58 @@
-import { Box, Typography } from '@mui/material'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux'
-import { createJobTypeAction } from '../../redux/actions/jobTypeAction';
-
-
-
-const validationSchema = yup.object({
-
-    jobTypeName: yup
-        .string('Enter a Category')
-        .required('Category is required'),
-});
-
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createJobTypeAction } from "../../redux/actions/jobTypeAction";
 
 const DashCreateCategory = () => {
+  const { user } = useSelector((state) => state.userProfile);
+  const dispatch = useDispatch();
 
-    const { user } = useSelector(state => state.userProfile);
-    const dispatch = useDispatch();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const jobTypeName = event.target.jobTypeName.value;
+    const values = {
+      user: user && user._id,
+      jobTypeName,
+    };
+    dispatch(createJobTypeAction(values));
+    event.target.reset();
+  };
 
-    const formik = useFormik({
-        initialValues: {
-            user: user && user._id,
-            jobTypeName: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values, actions) => {
-            dispatch(createJobTypeAction(values))
-            //alert(JSON.stringify(values, null, 2));
-            actions.resetForm();
-        },
-    });
+  return (
+    <div className="h-screen flex items-center justify-center pt-4">
+      <form
+        onSubmit={handleSubmit}
+        className="border border-gray-300 bg-white rounded p-4"
+      >
+        <div className="text-center ">
+          <h1 className="text-3xl text-blue-600 font-bold pb-3">
+            Create a Category
+          </h1>
+        </div>
+        <div className="mb-3">
+          <label
+            htmlFor="jobTypeName"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Category
+          </label>
+          <input
+            type="text"
+            id="jobTypeName"
+            name="jobTypeName"
+            placeholder="Category name"
+            className="border rounded w-full py-2 px-3"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Create category
+        </button>
+      </form>
+    </div>
+  );
+};
 
-
-    return (
-        <>
-
-            <Box sx={{ height: '100%', display: "flex", alignItems: "center", justifyContent: "center", pt: 4 }}>
-
-
-                <Box onSubmit={formik.handleSubmit} component="form" className='form_style border-style' >
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                        <Typography variant="h5" component="h2" sx={{ pb: 3 }}>
-                            Create a Category
-                        </Typography>
-                        <TextField sx={{ mb: 3 }}
-                            fullWidth
-                            id="jobTypeName"
-                            label="category"
-                            name='jobTypeName'
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            placeholder="category name"
-                            value={formik.values.jobTypeName}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.jobTypeName && Boolean(formik.errors.jobTypeName)}
-                            helperText={formik.touched.jobTypeName && formik.errors.jobTypeName}
-                        />
-
-
-                        <Button fullWidth variant="contained" type='submit' >Create category</Button>
-                    </Box>
-                </Box>
-            </Box>
-
-        </>
-    )
-}
-
-export default DashCreateCategory
+export default DashCreateCategory;

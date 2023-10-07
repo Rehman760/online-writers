@@ -1,38 +1,31 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { useSelector } from 'react-redux';
+import React from "react";
+import { useSelector } from "react-redux";
 
 const SelectComponent = ({ handleChangeCategory, cat }) => {
+  const { jobType } = useSelector((state) => state.jobTypeAll);
 
-    const { jobType } = useSelector(state => state.jobTypeAll);
+  return (
+    <div className="w-48">
+      <label htmlFor="category" className="block text-gray-700">
+        Category
+      </label>
+      <select
+        id="category"
+        name="category"
+        value={cat}
+        onChange={handleChangeCategory}
+        className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+      >
+        <option value="">All</option>
+        {jobType &&
+          jobType.map((jt) => (
+            <option key={jt._id} value={jt._id}>
+              {jt.jobTypeName}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
 
-    return (
-        <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={cat}
-                    label="Category"
-                    onChange={handleChangeCategory}
-                >
-                    <MenuItem value="">All</MenuItem>
-                    {
-                        jobType && jobType.map(jt => (
-                            <MenuItem key={jt._id} value={jt._id}>{jt.jobTypeName}</MenuItem>
-                        ))
-                    }
-
-
-                </Select>
-            </FormControl>
-        </Box>
-    )
-}
-
-export default SelectComponent
+export default SelectComponent;

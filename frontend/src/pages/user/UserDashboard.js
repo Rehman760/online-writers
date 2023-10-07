@@ -1,45 +1,31 @@
-import { Typography, Box } from '@mui/material'
-import { Stack } from '@mui/system'
-import React from 'react'
-import StatComponent from '../../component/StatComponent'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import WorkIcon from '@mui/icons-material/Work';
-import { useSelector } from 'react-redux'
-import moment from 'moment'
+import React from "react";
+import { useSelector } from "react-redux";
+import StatComponent from "../../component/StatComponent";
+import { FaCalendarAlt, FaBriefcase } from "react-icons/fa";
+import moment from "moment";
 
 const UserDashboard = () => {
-    const { user } = useSelector(state => state.userProfile);
-    return (
-        <>
-            <Box >
+  const { user } = useSelector((state) => state.userProfile);
 
-                <Typography variant="h4" sx={{ color: "white", pb: 3 }}>
-                    Dashboard
-                </Typography>
-                <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={{ xs: 1, sm: 2, md: 4 }}
-                >
+  return (
+    <div className="p-4">
+      <h1 className="text-3xl font-bold text-white pb-3">Dashboard</h1>
+      <div className="space-y-4 sm:flex sm:space-x-4 sm:space-y-0">
+        <StatComponent
+          value={user && moment(user.createdAt).format("YYYY / MM / DD")}
+          icon={<FaCalendarAlt className="text-white text-3xl" />}
+          description="Member since"
+          money=""
+        />
+        <StatComponent
+          value={user && user.jobsHistory.length}
+          icon={<FaBriefcase className="text-white text-3xl" />}
+          description="Number of jobs submitted"
+          money=""
+        />
+      </div>
+    </div>
+  );
+};
 
-                    <StatComponent
-                        value={user && moment(user.createdAt).format('YYYY / MM / DD')}
-                        icon={<CalendarMonthIcon sx={{ color: "#fafafa", fontSize: 30 }} />}
-                        description="Member since"
-                        money=''
-                    />
-                    <StatComponent
-                        value={user && user.jobsHistory.length}
-                        icon={<WorkIcon sx={{ color: "#fafafa", fontSize: 30 }} />}
-                        description="Number of jobs submitted"
-                        money=''
-                    />
-
-
-                </Stack>
-            </Box>
-
-        </>
-    )
-}
-
-export default UserDashboard
+export default UserDashboard;

@@ -1,19 +1,13 @@
-
-import { Card, CardContent, useTheme } from '@mui/material'
-
+import React from "react";
 
 const ChartComponent = ({ children }) => {
-    const { palette } = useTheme();
-    return (
-        <>
-            <Card sx={{ bgcolor: palette.secondary.midNightBlue, width: "100%" }}>
-                <CardContent>
-                    {children}
-                </CardContent>
+  return (
+    <>
+      <div className="bg-midNightBlue w-full">
+        <div className="w-full max-w-full p-4 mx-auto">{children}</div>
+      </div>
+    </>
+  );
+};
 
-            </Card>
-        </>
-    )
-}
-
-export default ChartComponent
+export default ChartComponent;

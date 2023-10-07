@@ -1,42 +1,34 @@
-import { useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
-
-
+import React from "react";
+import { useSelector } from "react-redux";
+import { FaUser, FaEnvelope } from "react-icons/fa";
 
 const UserInfoDashboard = () => {
-    const { user } = useSelector(state => state.userProfile);
-    const { palette } = useTheme();
-    return (
-        <>
-            <Box sx={{ maxWidth: "50%", margin: "auto", pt: 10 }}>
-                <Card sx={{ minWidth: 275, bgcolor: palette.secondary.midNightBlue }}>
-                    <CardContent>
-                        <Typography sx={{ fontSize: 16 }} color="#fafafa" gutterBottom>
-                            Personal Info
-                        </Typography>
-                        <hr style={{ marginBottom: "30px" }} />
-                        <Typography variant="h6" component="div" sx={{ color: "#fafafa" }} >
-                            First name: {user && user.firstName}
-                        </Typography>
-                        <Typography variant="h6" component="div" sx={{ color: "#fafafa" }} >
-                            Last name: {user && user.lastName}
-                        </Typography>
-                        <Typography variant="h6" component="div" sx={{ color: "#fafafa" }} >
-                            E-mail:  {user && user.email}
-                        </Typography>
-                        <Typography sx={{ mb: 1.5, color: "grey", pt: 2 }} color="text.secondary">
-                            Status: {user && user.role === 0 ? "Regular user" : "Admin"}
-                        </Typography>
+  const { user } = useSelector((state) => state.userProfile);
 
-                    </CardContent>
-                </Card>
-            </Box>
-        </>
-    )
-}
+  return (
+    <div className="max-w-1/2 mx-auto pt-10">
+      <div className="bg-blue-400">
+        <div className="px-6 py-4">
+          <p className="text-2xl font-semibold text-white">Personal Info</p>
+          <hr className="my-6" />
+          <p className="text-lg text-white">
+            First name: {user && user.firstName}
+          </p>
+          <p className="text-lg text-white">
+            Last name: {user && user.lastName}
+          </p>
+          <p className="text-lg text-white">
+            <FaEnvelope className="inline text-white mr-2" />
+            E-mail: {user && user.email}
+          </p>
+          <p className="text-gray-500 pt-8">
+            <FaUser className="inline text-white mr-2" />
+            Status: {user && user.role === 0 ? "Regular user" : "Admin"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default UserInfoDashboard
+export default UserInfoDashboard;

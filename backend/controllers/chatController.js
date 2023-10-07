@@ -6,18 +6,21 @@ const io = require("../server");
 
 exports.sendMessage = async (req, res) => {
   try {
-    const { sender, receiver, content, chatRoom } = req.body;
+    const { sender, content, chatRoom } = req.body;
 
-    // Validate sender and receiver IDs here
-
-    const message = new Message({ sender, receiver, content, chatRoom });
-    await message.save();
-
-    // Broadcast the message to the recipient's socket
-    const receiverSocketId = getUserSocket(receiver); // Implement a userSocketMap as previously mentioned
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("message", message);
+    // Validate sender and chatRoom here
+    if (!sender || !chatRoom) {
+      return res
+        .status(400)
+        .json({ error: "Sender and chatRoom are required." });
     }
+
+    const message = new Message({ sender, content, chatRoom });
+    await message.save();
+    console.log(message);
+
+    // Broadcast the message to everyone in the chat room
+    io.to(chatRoom).emit("message", message);
 
     return res.status(201).json(message);
   } catch (error) {

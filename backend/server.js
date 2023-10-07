@@ -9,10 +9,15 @@ var cors = require("cors");
 const cookieParser = require("cookie-parser");
 const errorHandler = require("./middleware/error");
 const initializeChatSocket = require("./sockets/chatSocket");
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  })
+);
 
 const server = http.createServer(app);
-const io = initializeChatSocket(server);
-module.exports = io;
+initializeChatSocket(server);
 //import routes
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -54,6 +59,6 @@ app.use(errorHandler);
 //port
 const port = process.env.PORT || 9000;
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

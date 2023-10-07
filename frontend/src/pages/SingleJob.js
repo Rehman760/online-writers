@@ -1,89 +1,90 @@
-import { Card, CardContent, Stack, Typography } from '@mui/material'
-import { Box, Container } from '@mui/system'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import Footer from '../component/Footer'
-import LoadingBox from '../component/LoadingBox'
-import Navbar from '../component/Navbar'
-import { jobLoadSingleAction } from '../redux/actions/jobAction'
-import Button from '@mui/material/Button'
-import { userApplyJobAction } from '../redux/actions/userAction'
-import { useTheme } from '@emotion/react'
-
+import React, { useEffect } from "react";
+import Footer from "../component/Footer";
+import Navbar from "../component/Navbar";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import LoadingBox from "../component/LoadingBox";
+import { jobLoadSingleAction } from "../redux/actions/jobAction";
+import { userApplyJobAction } from "../redux/actions/userAction";
 
 const SingleJob = () => {
-    const { palette } = useTheme();
-    const dispatch = useDispatch();
-    const { singleJob, loading } = useSelector(state => state.singleJob)
-    const { id } = useParams();
-    useEffect(() => {
-        dispatch(jobLoadSingleAction(id));
-    }, [id]);
+  const dispatch = useDispatch();
+  const { singleJob, loading } = useSelector((state) => state.singleJob);
+  const { id } = useParams();
 
-    const applyForAJob = () => {
-        dispatch(userApplyJobAction({
-            title: singleJob && singleJob.title,
-            description: singleJob && singleJob.description,
-            salary: singleJob && singleJob.salary,
-            location: singleJob && singleJob.location
-        }))
-    }
+  useEffect(() => {
+    dispatch(jobLoadSingleAction(id));
+  }, [id]);
 
-    return (
-        <>
+  const applyForAJob = () => {
+    dispatch(
+      userApplyJobAction({
+        title: singleJob && singleJob.title,
+        description: singleJob && singleJob.description,
+        salary: singleJob && singleJob.salary,
+        location: singleJob && singleJob.location,
+      })
+    );
+  };
 
-            <Box sx={{ bgcolor: "#fafafa" }}>
+  return (
+    <>
+      <Navbar />
+      <div className="bg-gray-100 min-h-screen">
+        <div className="container mx-auto pt-30px">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="md:col-span-1 bg-white p-4">
+              {loading ? (
+                <LoadingBox />
+              ) : (
+                <div className="bg-white rounded-lg p-4">
+                  <h5 className="text-2xl font-semibold">
+                    {singleJob && singleJob.title}
+                  </h5>
+                  <p className="text-gray-500 my-2">
+                    <span className="font-semibold">Salary:</span> $
+                    {singleJob && singleJob.salary}
+                  </p>
+                  <p className="text-gray-500 my-2">
+                    <span className="font-semibold">Category:</span>{" "}
+                    {singleJob && singleJob.jobType
+                      ? singleJob.jobType.jobTypeName
+                      : "No category"}
+                  </p>
+                  <p className="text-gray-500 my-2">
+                    <span className="font-semibold">Location:</span>{" "}
+                    {singleJob && singleJob.location}
+                  </p>
+                  <p className="text-gray-600 mt-4">
+                    {singleJob && singleJob.description}
+                  </p>
+                </div>
+              )}
+            </div>
+            <div className="md:col-span-1 p-4 ">
+              <div className="bg-white rounded-lg p-4 flex justify-between m-3 ">
+                <button
+                  onClick={applyForAJob}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md"
+                >
+                  Applied for this Job
+                </button>
+                <button
+                  onClick={() => {
+                    alert("chat will be added");
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md"
+                >
+                  contact to admin
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
 
-                <Navbar />
-                <Box sx={{ height: '85vh' }}>
-                    <Container sx={{ pt: '30px' }}>
-
-                        <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
-                            spacing={{ xs: 1, sm: 2, md: 4 }}
-                        >
-                            <Box sx={{ flex: 4, p: 2 }}>
-
-                                {
-                                    loading ? <LoadingBox /> :
-
-                                        <Card sx={{ bgcolor: palette.primary.white }} >
-                                            <CardContent>
-                                                <Typography variant="h5" component="h3">
-                                                    {singleJob && singleJob.title}
-                                                </Typography>
-                                                <Typography variant="body2">
-                                                    <Box component="span" sx={{ fontWeight: 700 }}>Salary</Box>: ${singleJob && singleJob.salary}
-                                                </Typography>
-                                                <Typography variant="body2">
-                                                    <Box component="span" sx={{ fontWeight: 700 }}>Category</Box>: {singleJob && singleJob.jobType ? singleJob.jobType.jobTypeName : "No category"}
-                                                </Typography>
-                                                <Typography variant="body2">
-                                                    <Box component="span" sx={{ fontWeight: 700 }}>Location</Box>: {singleJob && singleJob.location}
-                                                </Typography>
-                                                <Typography variant="body2" sx={{ pt: 2 }}>
-                                                    {/* <h3>Job description:</h3> */}
-                                                    {singleJob && singleJob.description}
-                                                </Typography>
-                                            </CardContent>
-                                        </Card>
-                                }
-                            </Box>
-                            <Box sx={{ flex: 1, p: 2 }}>
-                                <Card sx={{ p: 2, bgcolor: palette.primary.white }}>
-                                    <Button onClick={applyForAJob} sx={{ fontSize: "13px" }} variant='contained'>Applied for this Job</Button>
-                                </Card>
-                            </Box>
-
-                        </Stack>
-
-                    </Container>
-                </Box>
-                <Footer />
-            </Box>
-        </>
-    )
-}
-
-export default SingleJob
+export default SingleJob;

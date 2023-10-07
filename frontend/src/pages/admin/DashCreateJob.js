@@ -1,169 +1,192 @@
-import { Box, MenuItem, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux'
-import { jobTypeLoadAction } from '../../redux/actions/jobTypeAction';
-import { registerAjobAction } from '../../redux/actions/jobAction';
-
-
-const validationSchema = yup.object({
-    title: yup
-        .string('Enter a job title')
-        .required('title is required'),
-    description: yup
-        .string('Enter a description')
-        .min(6, 'Description should be of minimum 6 characters length')
-        .required('Description is required'),
-    salary: yup
-        .number('Enter a salary')
-        .required('Salary is required'),
-    location: yup
-        .string('Enter a location')
-        .required('Location is required'),
-    jobType: yup
-        .string('Enter a Category')
-        .required('Category is required'),
-});
-
-
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
+import { jobTypeLoadAction } from "../../redux/actions/jobTypeAction";
+import { registerAjobAction } from "../../redux/actions/jobAction";
+import * as yup from "yup";
 const DashCreateJob = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const [jobType, setJobType] = useState([]);
+  const { jobTypeAll } = useSelector((state) => state);
+  const { jobType: jobTypeList } = jobTypeAll;
 
-    //job type
-    useEffect(() => {
-        dispatch(jobTypeLoadAction());
-    }, []);
+  useEffect(() => {
+    dispatch(jobTypeLoadAction());
+  }, [dispatch]);
 
-    const { jobType } = useSelector(state => state.jobTypeAll);
+  useEffect(() => {
+    if (jobTypeList) {
+      setJobType(jobTypeList);
+    }
+  }, [jobTypeList]);
 
-    const formik = useFormik({
-        initialValues: {
-            title: '',
-            description: '',
-            salary: '',
-            location: '',
-            jobType: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values, actions) => {
-            dispatch(registerAjobAction(values))
-            // alert(JSON.stringify(values, null, 2));
-            actions.resetForm();
-        },
-    });
+  const validationSchema = yup.object({
+    title: yup.string("Enter a job title").required("Title is required"),
+    description: yup
+      .string("Enter a description")
+      .min(6, "Description should be at least 6 characters")
+      .required("Description is required"),
+    salary: yup.number("Enter a salary").required("Salary is required"),
+    location: yup.string("Enter a location").required("Location is required"),
+    jobType: yup.string("Select a Category").required("Category is required"),
+  });
 
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      salary: "",
+      location: "",
+      jobType: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values, actions) => {
+      dispatch(registerAjobAction(values));
+      actions.resetForm();
+    },
+  });
 
+  return (
+    <div className="h-screen flex items-center justify-center pt-4">
+      <form
+        onSubmit={formik.handleSubmit}
+        className="border border-gray-300 p-4 bg-white rounded"
+      >
+        <div className="text-center">
+          <h1 className="text-2xl font-bold pb-3">Register a Job</h1>
+        </div>
+        <div className="mb-3">
+          <label
+            htmlFor="title"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Title"
+            className={`border rounded w-full py-2 px-3 ${
+              formik.errors.title ? "border-red-500" : ""
+            }`}
+            required
+            value={formik.values.title}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.title && formik.errors.title && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.title}</p>
+          )}
+        </div>
+        <div className="mb-3">
+          <label
+            htmlFor="description"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Description"
+            className={`border rounded w-full py-2 px-3 ${
+              formik.errors.description ? "border-red-500" : ""
+            }`}
+            required
+            value={formik.values.description}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.description && formik.errors.description && (
+            <p className="text-red-500 text-sm mt-1">
+              {formik.errors.description}
+            </p>
+          )}
+        </div>
+        <div className="mb-3">
+          <label
+            htmlFor="salary"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Salary
+          </label>
+          <input
+            type="text"
+            id="salary"
+            name="salary"
+            placeholder="Salary"
+            className={`border rounded w-full py-2 px-3 ${
+              formik.errors.salary ? "border-red-500" : ""
+            }`}
+            required
+            value={formik.values.salary}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.salary && formik.errors.salary && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.salary}</p>
+          )}
+        </div>
+        <div className="mb-3">
+          <label
+            htmlFor="location"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Location
+          </label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            placeholder="Location"
+            className={`border rounded w-full py-2 px-3 ${
+              formik.errors.location ? "border-red-500" : ""
+            }`}
+            required
+            value={formik.values.location}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.location && formik.errors.location && (
+            <p className="text-red-500 text-sm mt-1">
+              {formik.errors.location}
+            </p>
+          )}
+        </div>
+        <div className="mb-3">
+          <label
+            htmlFor="jobType"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Category
+          </label>
+          <select
+            id="jobType"
+            name="jobType"
+            className={`border rounded w-full py-2 px-3 ${
+              formik.errors.jobType ? "border-red-500" : ""
+            }`}
+            required
+            value={formik.values.jobType}
+            onChange={formik.handleChange}
+          >
+            <option value="" key=""></option>
+            {jobType.map((category) => (
+              <option value={category._id} key={category._id}>
+                {category.jobTypeName}
+              </option>
+            ))}
+          </select>
+          {formik.touched.jobType && formik.errors.jobType && (
+            <p className="text-red-500 text-sm mt-1">{formik.errors.jobType}</p>
+          )}
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Create job
+        </button>
+      </form>
+    </div>
+  );
+};
 
-    return (
-        <>
-
-            <Box sx={{ height: '100%', display: "flex", alignItems: "center", justifyContent: "center", pt: 4 }}>
-
-
-                <Box onSubmit={formik.handleSubmit} component="form" className='form_style border-style' >
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                        <Typography variant="h5" component="h2" sx={{ pb: 3 }}>
-                            Register a Job
-                        </Typography>
-                        <TextField sx={{ mb: 3 }}
-                            fullWidth
-                            id="title"
-                            label="Title"
-                            name='title'
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            placeholder="Title"
-                            value={formik.values.title}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.title && Boolean(formik.errors.title)}
-                            helperText={formik.touched.title && formik.errors.title}
-                        />
-                        <TextField sx={{ mb: 3 }}
-                            fullWidth
-                            id="description"
-                            name="description"
-                            label="Description"
-                            type="text"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            placeholder="Description"
-                            value={formik.values.description}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.description && Boolean(formik.errors.description)}
-                            helperText={formik.touched.description && formik.errors.description}
-                        />
-                        <TextField sx={{ mb: 3 }}
-                            fullWidth
-                            id="salary"
-                            name="salary"
-                            label="Salary"
-                            type="text"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            placeholder="Salary"
-                            value={formik.values.salary}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.salary && Boolean(formik.errors.salary)}
-                            helperText={formik.touched.salary && formik.errors.salary}
-                        />
-                        <TextField sx={{ mb: 3 }}
-                            fullWidth
-                            id="location"
-                            name="location"
-                            label="Location"
-                            type="text"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            placeholder="Location"
-                            value={formik.values.location}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.location && Boolean(formik.errors.location)}
-                            helperText={formik.touched.location && formik.errors.location}
-                        />
-
-                        <TextField sx={{ mb: 3 }}
-                            fullWidth
-                            className="px-2 my-2"
-                            variant="outlined"
-                            name="jobType"
-                            id="jobType"
-                            select
-                            label="Category"
-                            value={formik.values.jobType}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.jobType && Boolean(formik.errors.jobType)}
-                            helperText={formik.touched.jobType && formik.errors.jobType}
-                        >
-                            <MenuItem key={""} value={""}>
-
-                            </MenuItem>
-
-                            {jobType && jobType.map((cat) => (
-                                <MenuItem key={cat._id} value={cat._id}>
-                                    {cat.jobTypeName}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-
-                        <Button fullWidth variant="contained" type='submit' >Create job</Button>
-                    </Box>
-                </Box>
-            </Box>
-
-        </>
-    )
-}
-
-export default DashCreateJob
+export default DashCreateJob;

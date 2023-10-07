@@ -18,10 +18,7 @@ import {
   userReducerSignIn,
   userReducerSignUp,
 } from "./reducers/userReducer";
-import {
-  chatGetMessagesReducer,
-  chatSendMessageReducer,
-} from "./reducers/chatReducer";
+
 import { modeReducer } from "./reducers/themeModeReducer";
 
 //combine reducers
@@ -38,8 +35,6 @@ const reducer = combineReducers({
   mode: modeReducer,
   registerJob: registerAjobReducer,
   createJobType: createJobTypeReducer,
-  chatGetMessages: chatGetMessagesReducer,
-  chatSendMessage: chatSendMessageReducer,
 });
 
 //initial state
