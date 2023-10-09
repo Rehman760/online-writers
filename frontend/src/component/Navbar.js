@@ -46,30 +46,32 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="hidden md:flex space-x-4">
-            <Link to="/" className="text-white">
-              Home
-            </Link>
-            <Link to="/register" className="text-white">
-              Register
-            </Link>
-          </div>
+          <div>
+            {!userInfo && (
+              <Link
+                to="/register"
+                className="bg-white text-blue-500 px-8 cursor-pointer rounded"
+              >
+                Register
+              </Link>
+            )}
 
-          {userInfo ? (
-            <button
-              onClick={handleOpenNavMenu}
-              className="text-blue-500 bg-white px-8 cursor-pointer rounded"
-            >
-              visit
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              className="text-blue-500 bg-white rounded cursor-pointer px-8 "
-            >
-              Log In
-            </Link>
-          )}
+            {userInfo ? (
+              <button
+                onClick={handleOpenNavMenu}
+                className="text-blue-500 bg-white px-8 m-2 cursor-pointer rounded"
+              >
+                visit
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="text-blue-500 bg-white rounded m-2 cursor-pointer px-8 "
+              >
+                Log In
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
