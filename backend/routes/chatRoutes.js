@@ -11,16 +11,16 @@ router.get(
 ); //working
 
 // Send a message
-router.post("/send", isAuthenticated, chatController.sendMessage); //working
+router.post("/send", isAuthenticated, chatController.createChat); //working
 
 // Get all chat rooms for the admin
 router.get("/chats", isAuthenticated, isAdmin, chatController.getChats); //working
 
 // Get messages for a specific chat room
 router.get(
-  "/messages/room/:roomId",
+  "/messages/:sender/:receiver",
   isAuthenticated,
-  chatController.getChatMessages
+  chatController.getMessages
 );
 
 module.exports = router;

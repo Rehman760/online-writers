@@ -15,6 +15,7 @@ import {
   FaComment,
   FaObjectGroup,
   FaUserFriends,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
 
@@ -46,7 +47,7 @@ const SidebarAdm = () => {
     <div
       className={`w-${
         collapsed ? "16" : "60"
-      } bg-blue-600 border-r text-white transition-width duration-300 h-screen`}
+      } bg-blue-600 border-r text-white transition-width duration-300 `}
     >
       <div className="text-xl cursor-pointer p-4" onClick={toggleSidebar}>
         <FiMenu />
@@ -94,7 +95,10 @@ const SidebarAdm = () => {
                   <FaUsers />
                 ) : (
                   <>
-                    <FaUser /> {"Applied Jobs"}
+                    <FaUser />{" "}
+                    {userInfo && userInfo.role === 1
+                      ? "All users"
+                      : "Applied Jobs"}
                   </>
                 )}
               </Link>
@@ -124,6 +128,7 @@ const SidebarAdm = () => {
                     : "/user/chats"
                 }
                 className="flex items-center p-4 hover:bg-blue-700"
+                onClick={() => setCollapsed(true)} // Add this onClick handler
               >
                 {collapsed ? (
                   <FaComment />
@@ -137,6 +142,7 @@ const SidebarAdm = () => {
                 )}
               </Link>
             </li>
+
             {userInfo && userInfo.role === 1 && (
               <li>
                 <Link
@@ -147,12 +153,29 @@ const SidebarAdm = () => {
                     <FaObjectGroup />
                   ) : (
                     <>
-                      Category <FaObjectGroup />
+                      <FaObjectGroup />
+                      Category
                     </>
                   )}
                 </Link>
               </li>
             )}
+            <li>
+              <div
+                onClick={() => navigate("/")}
+                className="flex items-center p-4 hover:bg-blue-700"
+              >
+                {collapsed ? (
+                  <FaArrowLeft />
+                ) : (
+                  <>
+                    {" "}
+                    <FaArrowLeft />
+                    {"Go to Home"}
+                  </>
+                )}
+              </div>
+            </li>
           </ul>
         </div>
         <div className="pb-2 pt-2">

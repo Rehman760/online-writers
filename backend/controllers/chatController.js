@@ -3,31 +3,35 @@ const Message = require("../models/messageModel");
 const User = require("../models/userModel");
 const { getUserSocket } = require("../sockets/userSocketMap");
 const io = require("../server");
+exports.createChat = async (req, res) => {
+  const newChat = new Message(req.body);
 
-exports.sendMessage = async (req, res) => {
   try {
-    const { sender, content, chatRoom } = req.body;
-
-    // Validate sender and chatRoom here
-    if (!sender || !chatRoom) {
-      return res
-        .status(400)
-        .json({ error: "Sender and chatRoom are required." });
+    // console.log("chat created");
+    const savedChat = await newChat.save();
+    const receiverID = getUserSocket.get(req.body.receiver);
+    if (receiverID) {
+      io.to(receiverID).emit("message", savedChat);
     }
 
-    const message = new Message({ sender, content, chatRoom });
-    await message.save();
-    console.log(message);
+    res.status(200).json(savedChat);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
 
-    // Broadcast the message to everyone in the chat room
-    io.to(chatRoom).emit("message", message);
-
-    return res.status(201).json(message);
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while sending the message." });
+exports.getMessages = async (req, res) => {
+  const { sender, receiver } = req.params;
+  try {
+    const messages = await Message.find({
+      $or: [
+        { sender: sender, receiver: receiver },
+        { sender: receiver, receiver: sender },
+      ],
+    });
+    res.status(200).json(messages);
+  } catch (err) {
+    res.status(500).json(err);
   }
 };
 

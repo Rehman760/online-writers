@@ -24,6 +24,7 @@ const LogIn = () => {
   const navigate = useNavigate();
   const { isAuthenticated, userInfo } = useSelector((state) => state.signIn);
   useEffect(() => {
+    console.log("userInfo", userInfo);
     if (isAuthenticated) {
       if (userInfo.role === 1) {
         navigate("/admin/dashboard");

@@ -58,12 +58,15 @@ const Navbar = () => {
           {userInfo ? (
             <button
               onClick={handleOpenNavMenu}
-              className="text-white cursor-pointer"
+              className="text-blue-500 bg-white px-8 cursor-pointer rounded"
             >
-              Menu
+              visit
             </button>
           ) : (
-            <Link to="/login" className="text-white">
+            <Link
+              to="/login"
+              className="text-blue-500 bg-white rounded cursor-pointer px-8 "
+            >
               Log In
             </Link>
           )}

@@ -81,10 +81,11 @@ export const userLogoutAction = () => async (dispatch) => {
 };
 
 //user profile action
-export const userProfileAction = (userId) => async (dispatch) => {
+export const userProfileAction = () => async (dispatch) => {
   dispatch({ type: USER_LOAD_REQUEST });
   try {
     const { data } = await axios.get(`/api/user/profile`);
+    localStorage.setItem("userInfoData", JSON.stringify(data));
     dispatch({
       type: USER_LOAD_SUCCESS,
       payload: data,

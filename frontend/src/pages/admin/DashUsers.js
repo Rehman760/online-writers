@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { allUserAction } from "../../redux/actions/userAction";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import axios from "axios";
 const DashUsers = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -13,8 +14,16 @@ const DashUsers = () => {
   let data = [];
   data = users || [];
 
-  const deleteUserById = (e, id) => {
-    console.log(id);
+  const deleteUserById = async (e, id) => {
+    axios
+      .delete(`/api/admin/user/delete/${id}`)
+      .then((res) => {
+        dispatch(allUserAction());
+        console.log("user has been deleted", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const columns = [
@@ -74,7 +83,7 @@ const DashUsers = () => {
       </div>
       <div className="pb-2 flex justify-end">
         <button className="bg-green-500 hover:bg-green-700 text-white text-sm px-3 py-2 rounded">
-          <Link to="/create/user" style={{ textDecoration: "none" }}>
+          <Link to="/admin/create/user" style={{ textDecoration: "none" }}>
             Create user
           </Link>
         </button>

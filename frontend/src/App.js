@@ -20,22 +20,26 @@ import Register from "./pages/Register";
 import DashCategory from "./pages/admin/DashCategory";
 import DashCreateJob from "./pages/admin/DashCreateJob";
 import DashCreateCategory from "./pages/admin/DashCreateCategory";
+import DashCreateUser from "./pages/admin/DashCreateUser";
 
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import ChatApp from "./component/ChatApp";
+import ChatList from "./pages/admin/ChatList";
 
 //HOC
 const UserDashboardHOC = Layout(UserDashboard);
 const UserJobsHistoryHOC = Layout(UserJobsHistory);
 const UserInfoDashboardHOC = Layout(UserInfoDashboard);
+const UserChatAppHOC = Layout(ChatApp);
 const AdminDashboardHOC = Layout(AdminDashboard);
 const DashUsersHOC = Layout(DashUsers);
 const DashJobsHOC = Layout(DashJobs);
 const DashCategoryHOC = Layout(DashCategory);
 const DashCreateJobHOC = Layout(DashCreateJob);
+const DashCreateUserHOC = Layout(DashCreateUser);
 const DashCreateCategoryHOC = Layout(DashCreateCategory);
-
+const AdminChatListHOC = Layout(ChatList);
 const socket = io("http://localhost:9000");
 
 const App = () => {
@@ -63,6 +67,14 @@ const App = () => {
             element={
               <AdminRoute>
                 <DashUsersHOC />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/create/user"
+            element={
+              <AdminRoute>
+                <DashCreateUserHOC />
               </AdminRoute>
             }
           />
@@ -102,11 +114,26 @@ const App = () => {
             path="/admin/chats"
             element={
               <AdminRoute>
-                <ChatApp />
+                <AdminChatListHOC />
               </AdminRoute>
             }
           />
-          <Route path="/user/chats" element={<ChatApp />} />
+          <Route
+            path="/admin/user/chats"
+            element={
+              <AdminRoute>
+                <UserChatAppHOC />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/user/chats"
+            element={
+              <UserRoute>
+                <UserChatAppHOC />
+              </UserRoute>
+            }
+          />
           <Route
             path="/user/dashboard"
             element={

@@ -103,3 +103,16 @@ exports.createUserJobsHistory = async (req, res, next) => {
     return next(error);
   }
 };
+
+exports.createUser = async (req, res, next) => {
+  try {
+    const user = await User.create(req.body);
+    res.status(200).json({
+      success: true,
+      user,
+    });
+    next();
+  } catch (error) {
+    return next(error);
+  }
+};
